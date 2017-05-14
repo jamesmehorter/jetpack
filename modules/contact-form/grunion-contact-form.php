@@ -290,9 +290,11 @@ class Grunion_Contact_Form_Plugin {
 			// It's a form embedded in a post
 			$post = get_post( $id );
 
-			// Process the content to populate Grunion_Contact_Form::$last
-			/** This filter is already documented in core. wp-includes/post-template.php */
-			apply_filters( 'the_content', $post->post_content );
+			if ( $post instanceof WP_Post ) {
+				// Process the content to populate Grunion_Contact_Form::$last
+				/** This filter is already documented in core. wp-includes/post-template.php */
+				apply_filters( 'the_content', $post->post_content );
+			}
 		}
 
 		$form = Grunion_Contact_Form::$last;
