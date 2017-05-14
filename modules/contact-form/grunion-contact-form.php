@@ -1592,6 +1592,7 @@ class Grunion_Contact_Form extends Crunion_Contact_Form_Shortcode {
 		foreach ( $field_value_map as $type => $meta_key ) {
 			if ( isset( $field_ids[ $type ] ) ) {
 				$field = $form->fields[ $field_ids[ $type ] ];
+				$value = '';
 
 				if ( $meta_key ) {
 					if ( isset( $content_fields[ "_feedback_{$meta_key}" ] ) ) {
