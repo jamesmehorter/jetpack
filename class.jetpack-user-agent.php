@@ -15,6 +15,23 @@ function jetpack_is_mobile( $kind = 'any', $return_matched_agent = false ) {
 	static $first_run     = true;
 	static $matched_agent = '';
 
+	/**
+	 * Filter the value of $kinds to potentially bypass static variable cache
+	 *
+	 * During operations like unit testing, one may need to call jetpack_is_mobile
+	 * over and over, and setting different user agents each item. In this scenario,
+	 * $kinds needs to be reset on each call to prevent static variable cache from being used.
+	 *
+	 * @since 5.1-alpha
+	 *
+	 * @param array  $kinds                An array of the kinds of devices to check for.
+	 * @param string $kind                 Category of mobile device being checked.
+	 * @param bool   $return_matched_agent Boolean indicating if the UA should be returned.
+	 * @param string $matched_agent        The name of the user's device type.
+	 * @param bool   $first_run            Indicates whether this function was called already.
+	 */
+	$kinds = apply_filters( 'jetpack_is_mobile_kinds', $kinds, $kind, $return_matched_agent, $matched_agent, $first_run );
+
 	// If an invalid kind is passed in, reset it to default.
 	if ( ! isset( $kinds[ $kind ] ) ) {
 			$kind = 'any';
@@ -59,6 +76,23 @@ function jetpack_is_mobile( $kind = 'any', $return_matched_agent = false ) {
 	if( $ua_info->is_blackberry_tablet() ) {
 		return false;
 	}
+
+	/**
+	 * Filter the value of $first_run to potentially bypass static variable cache
+	 *
+	 * During operations like unit testing, one may need to call jetpack_is_mobile
+	 * over and over, and setting different user agents each item. In this scenario,
+	 * $first_run needs to be bypassed to prevent static variable cache from being used.
+	 *
+	 * @since 5.1-alpha
+	 *
+	 * @param bool   $first_run            Indicates whether this function was called already.
+	 * @param string $kind                 Category of mobile device being checked.
+	 * @param bool   $return_matched_agent Boolean indicating if the UA should be returned.
+	 * @param string $matched_agent        The name of the user's device type.
+	 * @param object $ua_info              The user agent information as returned by Jetpack_User_Agent_Info.
+	 */
+	$first_run = apply_filters( 'jetpack_is_mobile_first_run', $first_run, $kind, $return_matched_agent, $matched_agent, $ua_info );
 
 	if ( $first_run ) {
 		$first_run = false;
